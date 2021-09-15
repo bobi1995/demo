@@ -16,6 +16,53 @@ const bcrypt = require("bcryptjs");
 const mutation = new GraphQLObjectType({
   name: "RootMutation",
   fields: () => ({
+    deleteClient: {
+      type: Client,
+      args: {
+        clientId: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+      },
+      async resolve(parentValue, args) {
+        const client = await MongoClient.findById(args.clientId);
+        if (!client) {
+          throw new Error("Client does not exist");
+        }
+        if (client.orders.length > 0) {
+          client.orders.map(async (el) => {
+            const order = await MongoOrder.findById(el);
+            if (!order) {
+              throw new Error("Order does not exist");
+            }
+
+            if (order.items.length < 1) {
+              throw new Error("Item does not exist");
+            }
+
+            order.items.map(async (it) => {
+              const item = await MongoItem.findById(it);
+              item.order.splice(item.order.indexOf(el), 1);
+              await item.save();
+            });
+
+            await MongoOrder.deleteOne({
+              _id: el,
+            });
+          });
+        }
+        if (client.contact.length > 0) {
+          client.contact.map(async (cont) => {
+            await MongoContact.deleteOne({ _id: cont });
+          });
+        }
+
+        await MongoClient.deleteOne({
+          _id: args.clientId,
+        });
+
+        return client;
+      },
+    },
     deleteOrder: {
       type: Order,
       args: {

@@ -2,13 +2,13 @@ const express = require("express");
 const { graphqlHTTP } = require("express-graphql");
 const mongoose = require("mongoose");
 const schema = require("./schema/schema");
-// const isAuth = require("./middleware/Auth");
+const isAuth = require("./middleware/Auth");
 
 const url = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASS}@demo-shard-00-00.s5bfb.mongodb.net:27017,demo-shard-00-01.s5bfb.mongodb.net:27017,demo-shard-00-02.s5bfb.mongodb.net:27017/${process.env.MONGO_DB}?ssl=true&replicaSet=atlas-y5tgea-shard-0&authSource=admin&retryWrites=true&w=majority`;
 
 const app = express();
 
-//app.use(isAuth);
+app.use(isAuth);
 app.use(express.json());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");

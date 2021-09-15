@@ -62,4 +62,13 @@ const Item = new GraphQLObjectType({
   }),
 });
 
-module.exports = { User, Client, Contact, Order, Item };
+const AuthData = new GraphQLObjectType({
+  name: "AuthData",
+  fields: () => ({
+    token: { type: GraphQLNonNull(GraphQLString) },
+    tokenExpiration: { type: GraphQLNonNull(GraphQLInt) },
+    userId: { type: GraphQLNonNull(GraphQLString) },
+  }),
+});
+
+module.exports = { User, Client, Contact, Order, Item, AuthData };
