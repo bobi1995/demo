@@ -18,6 +18,28 @@ const { User, Client, Contact, Order, Item } = require("./types");
 const query = new GraphQLObjectType({
   name: "RootQuery",
   fields: () => ({
+    getSingleItem: {
+      type: Item,
+      args: {
+        itemId: {
+          type: GraphQLString,
+        },
+      },
+      async resolve(parentValue, args) {
+        const item = await ItemMongo.findById(args.itemId).populate("order");
+        if (!item) {
+          throw new Error("Item does not exists");
+        }
+        return item;
+      },
+    },
+    getAllItems: {
+      type: GraphQLList(Item),
+      async resolve() {
+        const items = await ItemMongo.find().populate("order");
+        return items;
+      },
+    },
     login: {
       type: AuthData,
       args: {
@@ -29,7 +51,6 @@ const query = new GraphQLObjectType({
         },
       },
       async resolve(parentValue, args) {
-        console.log(args);
         const user = await UserMongo.findOne({ username: args.username });
         if (!user) {
           throw new Error("User does not exists");
