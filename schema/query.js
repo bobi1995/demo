@@ -55,7 +55,6 @@ const query = new GraphQLObjectType({
         if (!user) {
           throw new Error("User does not exists");
         }
-
         const isEqual = await bcrypt.compare(args.password, user.password);
         if (!isEqual) {
           throw new Error("Password is incorrect");
