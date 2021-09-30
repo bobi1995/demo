@@ -11,11 +11,16 @@ const User = new GraphQLObjectType({
   name: "User",
   fields: () => ({
     _id: { type: GraphQLNonNull(GraphQLString) },
-    firstName: { type: GraphQLString },
-    lastName: { type: GraphQLString },
-    type: { type: GraphQLString },
     username: { type: GraphQLNonNull(GraphQLString) },
     password: { type: GraphQLNonNull(GraphQLString) },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    email: { type: GraphQLString },
+    phone: { type: GraphQLString },
+    startDate: { type: GraphQLString },
+    endDate: { type: GraphQLString },
+    position: { type: GraphQLString },
+    salary: { type: GraphQLInt },
   }),
 });
 
@@ -58,6 +63,8 @@ const Item = new GraphQLObjectType({
     _id: { type: GraphQLNonNull(GraphQLString) },
     name: { type: GraphQLNonNull(GraphQLString) },
     price: { type: GraphQLNonNull(GraphQLFloat) },
+    description: { type: GraphQLString },
+    image: { type: GraphQLString },
     order: { type: GraphQLList(Order) },
   }),
 });

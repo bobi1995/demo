@@ -28,7 +28,7 @@ const query = new GraphQLObjectType({
       async resolve(parentValue, args) {
         const item = await ItemMongo.findById(args.itemId).populate("order");
         if (!item) {
-          throw new Error("Item does not exists");
+          throw new Error("Артикулът не същестува");
         }
         return item;
       },
@@ -53,11 +53,11 @@ const query = new GraphQLObjectType({
       async resolve(parentValue, args) {
         const user = await UserMongo.findOne({ username: args.username });
         if (!user) {
-          throw new Error("User does not exists");
+          throw new Error("Потребителят не съществува");
         }
         const isEqual = await bcrypt.compare(args.password, user.password);
         if (!isEqual) {
-          throw new Error("Password is incorrect");
+          throw new Error("Грешна парола");
         }
 
         const token = jwt.sign(
@@ -96,6 +96,11 @@ const query = new GraphQLObjectType({
       },
       async resolve(parentValue, args) {
         const user = await UserMongo.findById(args.userId);
+        if (!user) {
+          throw new Error(
+            "Избраният потребител не съществува или не може да бъде намерен."
+          );
+        }
         return user;
       },
     },

@@ -7,6 +7,12 @@ const itemSchema = new Schema({
   price: {
     type: Number,
   },
+  description: {
+    type: String,
+  },
+  image: {
+    type: String,
+  },
   order: [
     {
       type: Schema.Types.ObjectId,

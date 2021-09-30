@@ -14,9 +14,14 @@ const userSchema = new Schema({
   lastName: {
     type: String,
   },
-  type: {
+  email: {
     type: String,
   },
+  phone: { type: String },
+  startDate: { type: String },
+  endDate: { type: String },
+  position: { type: String },
+  salary: { type: Number },
 });
 
 module.exports = model("User", userSchema);

@@ -4,6 +4,7 @@ const {
   GraphQLNonNull,
   GraphQLFloat,
   GraphQLList,
+  GraphQLInt,
 } = require("graphql");
 const MongoUser = require("../mongoModels/user");
 const MongoClient = require("../mongoModels/client");
@@ -109,6 +110,12 @@ const mutation = new GraphQLObjectType({
         price: {
           type: GraphQLNonNull(GraphQLFloat),
         },
+        description: {
+          type: GraphQLString,
+        },
+        image: {
+          type: GraphQLString,
+        },
       },
       async resolve(parentValue, args) {
         const exist = await MongoItem.findOne({ name: args.name });
@@ -118,6 +125,8 @@ const mutation = new GraphQLObjectType({
           const item = new MongoItem({
             name: args.name,
             price: args.price,
+            description: args.description,
+            image: args.image,
             order: [],
           });
           return item
@@ -186,7 +195,7 @@ const mutation = new GraphQLObjectType({
         lastName: {
           type: GraphQLString,
         },
-        type: {
+        email: {
           type: GraphQLString,
         },
         username: {
@@ -195,10 +204,27 @@ const mutation = new GraphQLObjectType({
         password: {
           type: GraphQLNonNull(GraphQLString),
         },
+        phone: { type: GraphQLString },
+        startDate: { type: GraphQLString },
+        endDate: { type: GraphQLString },
+        position: { type: GraphQLString },
+        salary: { type: GraphQLInt },
       },
+
       async resolve(
         parentValue,
-        { firstName, lastName, username, password, type }
+        {
+          firstName,
+          lastName,
+          username,
+          password,
+          email,
+          phone,
+          startDate,
+          endDate,
+          position,
+          salary,
+        }
       ) {
         const exist = await MongoUser.findOne({ username: username });
         if (exist) {
@@ -210,7 +236,12 @@ const mutation = new GraphQLObjectType({
             lastName,
             username,
             password: hashedPassword,
-            type: type,
+            email,
+            phone,
+            startDate,
+            endDate,
+            position,
+            salary,
           });
           return user
             .save()
