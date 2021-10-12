@@ -17,6 +17,49 @@ const bcrypt = require("bcryptjs");
 const mutation = new GraphQLObjectType({
   name: "RootMutation",
   fields: () => ({
+    editItem: {
+      type: Item,
+      args: {
+        name: {
+          type: GraphQLNonNull(GraphQLString),
+        },
+        price: {
+          type: GraphQLFloat,
+        },
+        description: {
+          type: GraphQLString,
+        },
+        image: {
+          type: GraphQLString,
+        },
+        newName: {
+          type: GraphQLString,
+        },
+      },
+      async resolve(parentValue, args) {
+        const item = await MongoItem.findOne({ name: args.name });
+        if (!item) {
+          throw new Error("Item does not exist");
+        }
+        try {
+          const updatedItem = await MongoItem.findOneAndUpdate(
+            { _id: item._id },
+            {
+              $set: {
+                name: args.newName,
+                price: args.price,
+                description: args.description,
+                image: args.image,
+              },
+            }
+          );
+          return updatedItem;
+        } catch (error) {
+          throw new Error("Unsuccessfull update");
+        }
+      },
+    },
+
     deleteClient: {
       type: Client,
       args: {
@@ -120,7 +163,7 @@ const mutation = new GraphQLObjectType({
       async resolve(parentValue, args) {
         const exist = await MongoItem.findOne({ name: args.name });
         if (exist) {
-          throw new Error("User already exists");
+          throw new Error("Item already exists");
         } else {
           const item = new MongoItem({
             name: args.name,
