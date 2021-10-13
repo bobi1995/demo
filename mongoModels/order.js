@@ -17,6 +17,9 @@ const orderSchema = new Schema({
       ref: "Item",
     },
   ],
+  name: {
+    type: String,
+  },
 });
 
 module.exports = model("Order", orderSchema);

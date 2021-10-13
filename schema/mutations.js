@@ -196,6 +196,9 @@ const mutation = new GraphQLObjectType({
         itemsIds: {
           type: GraphQLList(GraphQLString),
         },
+        name: {
+          type: GraphQLNonNull(GraphQLString),
+        },
       },
       async resolve(parentValue, args) {
         const client = await MongoClient.findById(args.clientId);

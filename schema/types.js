@@ -54,6 +54,7 @@ const Order = new GraphQLObjectType({
     date: { type: GraphQLString },
     price: { type: GraphQLFloat },
     items: { type: GraphQLList(Item) },
+    name: { type: GraphQLNonNull(GraphQLString) },
   }),
 });
 
