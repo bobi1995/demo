@@ -11,14 +11,15 @@ const orderSchema = new Schema({
   price: {
     type: Number,
   },
-  items: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "Item",
-    },
-  ],
+  item: {
+    type: Schema.Types.ObjectId,
+    ref: "Item",
+  },
   name: {
     type: String,
+  },
+  quantity: {
+    type: Number,
   },
 });
 

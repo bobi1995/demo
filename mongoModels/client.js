@@ -11,6 +11,12 @@ const clientSchema = new Schema({
   orders: {
     type: String,
   },
+  logo: {
+    type: String,
+  },
+  website: {
+    type: String,
+  },
   orders: [
     {
       type: Schema.Types.ObjectId,

@@ -82,7 +82,7 @@ const query = new GraphQLObjectType({
       type: GraphQLList(Order),
       async resolve(parentValue, args) {
         const orders = await OrderMongo.find()
-          .populate("items")
+          .populate("item")
           .populate("client");
         return orders;
       },
@@ -113,7 +113,7 @@ const query = new GraphQLObjectType({
             .populate({
               path: "orders",
               populate: {
-                path: "items",
+                path: "item",
                 model: "Item",
               },
             });

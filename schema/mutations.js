@@ -79,15 +79,13 @@ const mutation = new GraphQLObjectType({
               throw new Error("Order does not exist");
             }
 
-            if (order.items.length < 1) {
+            if (!order.item) {
               throw new Error("Item does not exist");
             }
 
-            order.items.map(async (it) => {
-              const item = await MongoItem.findById(it);
-              item.order.splice(item.order.indexOf(el), 1);
-              await item.save();
-            });
+            const item = await MongoItem.findById(order.item);
+            item.order.splice(item.order.indexOf(el), 1);
+            await item.save();
 
             await MongoOrder.deleteOne({
               _id: el,
@@ -124,15 +122,13 @@ const mutation = new GraphQLObjectType({
           throw new Error("Client does not exist");
         }
 
-        if (order.items.length < 1) {
+        if (!order.item) {
           throw new Error("Item does not exist");
         }
 
-        order.items.map(async (el) => {
-          const item = await MongoItem.findById(el);
-          item.order.splice(item.order.indexOf(args.orderId), 1);
-          await item.save();
-        });
+        const item = await MongoItem.findById(order.item);
+        item.order.splice(item.order.indexOf(args.orderId), 1);
+        await item.save();
 
         client.orders.splice(client.orders.indexOf(args.orderId), 1);
         await client.save();
@@ -193,11 +189,14 @@ const mutation = new GraphQLObjectType({
         price: {
           type: GraphQLNonNull(GraphQLFloat),
         },
-        itemsIds: {
-          type: GraphQLList(GraphQLString),
+        itemId: {
+          type: GraphQLString,
         },
         name: {
           type: GraphQLNonNull(GraphQLString),
+        },
+        quantity: {
+          type: GraphQLNonNull(GraphQLInt),
         },
       },
       async resolve(parentValue, args) {
@@ -205,26 +204,24 @@ const mutation = new GraphQLObjectType({
         if (!client) {
           throw new Error("Client does not exist");
         }
-        const items = await MongoItem.find({
-          _id: { $in: args.itemsIds },
-        }).exec();
+        const item = await MongoItem.findById(args.itemId).exec();
 
-        if (items.length < 1) {
+        if (!item) {
           throw new Error("Item does not exist");
         }
+
         const order = new MongoOrder({
           name: args.name,
           price: args.price,
           client: client,
-          items: items,
+          item: item,
           date: args.date ? args.date : new Date(),
+          quantity: args.quantity,
         });
 
         const result = await order.save();
-        items.map(async (el) => {
-          el.order.push(order);
-          await el.save();
-        });
+        item.order.push(order);
+        await item.save();
 
         client.orders.push(order);
         client.save();
@@ -308,6 +305,12 @@ const mutation = new GraphQLObjectType({
         address: {
           type: GraphQLString,
         },
+        logo: {
+          type: GraphQLString,
+        },
+        website: {
+          type: GraphQLString,
+        },
       },
       async resolve(parentValue, args, req) {
         // if (!req.isAuth) {
@@ -316,6 +319,8 @@ const mutation = new GraphQLObjectType({
         const client = new MongoClient({
           name: args.name,
           address: args.address,
+          logo: args.logo,
+          website: args.website,
         });
 
         return client

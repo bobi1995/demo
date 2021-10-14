@@ -32,6 +32,8 @@ const Client = new GraphQLObjectType({
     address: { type: GraphQLString },
     contact: { type: GraphQLList(Contact) },
     orders: { type: GraphQLList(Order) },
+    logo: { type: GraphQLString },
+    website: { type: GraphQLString },
   }),
 });
 
@@ -53,8 +55,9 @@ const Order = new GraphQLObjectType({
     client: { type: Client },
     date: { type: GraphQLString },
     price: { type: GraphQLFloat },
-    items: { type: GraphQLList(Item) },
+    item: { type: Item },
     name: { type: GraphQLNonNull(GraphQLString) },
+    quantity: { type: GraphQLInt },
   }),
 });
 
