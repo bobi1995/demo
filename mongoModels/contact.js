@@ -14,6 +14,9 @@ const contactSchema = new Schema({
   position: {
     type: String,
   },
+  email: {
+    type: String,
+  },
 });
 
 module.exports = model("Contact", contactSchema);

@@ -43,8 +43,9 @@ const Contact = new GraphQLObjectType({
     _id: { type: GraphQLNonNull(GraphQLString) },
     phone: { type: GraphQLString },
     firstName: { type: GraphQLString },
-    lastName: { type: GraphQLString },
+    lastName: { type: GraphQLNonNull(GraphQLString) },
     position: { type: GraphQLString },
+    email: { type: GraphQLString },
   }),
 });
 

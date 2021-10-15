@@ -341,12 +341,15 @@ const mutation = new GraphQLObjectType({
           type: GraphQLString,
         },
         lastName: {
-          type: GraphQLString,
+          type: GraphQLNonNull(GraphQLString),
         },
         phone: {
           type: GraphQLString,
         },
         position: {
+          type: GraphQLString,
+        },
+        email: {
           type: GraphQLString,
         },
       },
@@ -365,6 +368,7 @@ const mutation = new GraphQLObjectType({
           lastName: args.lastName,
           phone: args.phone,
           position: args.position,
+          email: args.email,
         });
 
         const result = await contact.save();
